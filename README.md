@@ -4,17 +4,16 @@ Reusable Cloudflare Workers for common tasks. Each worker is a standalone micros
 
 ## Workers
 
-| Worker | Description | Size | Deps |
-|--------|-------------|------|------|
-| `@utility-workers/pdf-text` | Extract text from PDFs | ~1.5MB | unpdf |
-| `@utility-workers/ai-parser` | Parse text to structured JSON via AI | ~50KB | none |
-| `@utility-workers/shared` | Shared types and utilities | - | - |
+| Worker | Description | Docs |
+|--------|-------------|------|
+| [@utility-workers/pdf-text](./packages/pdf-text) | Extract text from PDFs using unpdf | [README](./packages/pdf-text/README.md) |
+| [@utility-workers/ai-parser](./packages/ai-parser) | Parse text to structured JSON via AI | [README](./packages/ai-parser/README.md) |
+| @utility-workers/shared | Shared types and utilities | - |
 
 ## Quick Start
 
 ```bash
 # Install dependencies
-cd workers  # (or utility-workers after extraction)
 bun install
 
 # Run all workers locally
@@ -34,91 +33,13 @@ bun run deploy
 # Or deploy individually
 bun run deploy:pdf
 bun run deploy:ai
-
-# Set secrets for AI parser
-cd packages/ai-parser
-bunx wrangler secret put CF_AI_GATEWAY_ACCOUNT_ID
-bunx wrangler secret put CF_AI_GATEWAY_ID
-bunx wrangler secret put CF_AIG_AUTH_TOKEN
 ```
 
-## Usage
+See [ai-parser README](./packages/ai-parser/README.md#configuration) for required secrets.
 
-### PDF Text Extraction
+## Using from Another Worker
 
-```bash
-# Extract text from a PDF file
-curl -X POST https://pdf-text-worker.your-domain.workers.dev/extract \
-  -H "Content-Type: application/pdf" \
-  --data-binary @document.pdf
-```
-
-Response:
-```json
-{
-  "success": true,
-  "text": "Extracted text content...",
-  "pageCount": 5,
-  "processingTimeMs": 234
-}
-```
-
-### AI Schema Parsing
-
-```bash
-# Parse text into structured JSON
-curl -X POST https://ai-parser-worker.your-domain.workers.dev/parse \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "John Doe is a software engineer with 5 years experience...",
-    "schema": {
-      "type": "object",
-      "properties": {
-        "name": { "type": "string" },
-        "role": { "type": "string" },
-        "experience": { "type": "number" }
-      },
-      "required": ["name", "role"]
-    },
-    "systemPrompt": "Extract person information from the resume"
-  }'
-```
-
-Response:
-```json
-{
-  "success": true,
-  "data": {
-    "name": "John Doe",
-    "role": "software engineer",
-    "experience": 5
-  },
-  "usage": {
-    "promptTokens": 150,
-    "completionTokens": 25,
-    "totalTokens": 175
-  },
-  "processingTimeMs": 1234
-}
-```
-
-#### Optional Parameters
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `model` | string | `google/gemini-2.5-flash-lite` | AI model to use (see supported models below) |
-| `systemPrompt` | string | Generic extraction prompt | Custom instructions for the AI |
-| `temperature` | number | `0` | Response variability (0-2) |
-| `maxTokens` | number | `4096` | Maximum tokens in response |
-
-#### Limits
-
-- **PDF worker**: 50MB max file size
-- **AI parser**: 100KB max text size
-
-## Using from Another Worker (Service Bindings)
-
-### 1. Add service bindings to your wrangler.toml/jsonc
+### 1. Add service bindings to your wrangler.toml
 
 ```toml
 [[services]]
@@ -173,47 +94,7 @@ export default {
 };
 ```
 
-### 3. Or use raw fetch
-
-```typescript
-// PDF extraction
-const pdfResponse = await env.PDF_WORKER.fetch("http://internal/extract", {
-  method: "POST",
-  body: pdfBuffer,
-});
-const { text } = await pdfResponse.json();
-
-// AI parsing
-const aiResponse = await env.AI_PARSER.fetch("http://internal/parse", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ text, schema: mySchema }),
-});
-const { data } = await aiResponse.json();
-```
-
-## Configuration
-
-### AI Parser Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `CF_AI_GATEWAY_ACCOUNT_ID` | Yes* | Cloudflare account ID |
-| `CF_AI_GATEWAY_ID` | Yes* | AI Gateway ID |
-| `CF_AIG_AUTH_TOKEN` | Yes* | AI Gateway auth token |
-| `OPENROUTER_API_KEY` | Yes* | Direct OpenRouter key (fallback) |
-
-*Either AI Gateway OR OpenRouter key required.
-
-### Supported AI Models
-
-- `google/gemini-2.5-flash-lite` (default, fast & cheap)
-- `google/gemini-2.5-flash`
-- `google/gemini-2.5-pro`
-- `anthropic/claude-3.5-sonnet`
-- `anthropic/claude-3.5-haiku`
-- `openai/gpt-4o`
-- `openai/gpt-4o-mini`
+See individual worker READMEs for more usage examples.
 
 ## Project Structure
 
@@ -223,25 +104,10 @@ utility-workers/
 ├── biome.json            # Linting/formatting
 ├── tsconfig.json         # Base TypeScript config
 ├── turbo.json            # Task orchestration
-├── README.md             # This file
 └── packages/
     ├── shared/           # Shared types and utilities
-    │   ├── src/
-    │   │   ├── index.ts
-    │   │   ├── pdf-types.ts
-    │   │   ├── ai-types.ts
-    │   │   └── utils.ts
-    │   └── package.json
     ├── pdf-text/         # PDF extraction worker
-    │   ├── src/
-    │   │   └── index.ts
-    │   ├── wrangler.toml
-    │   └── package.json
     └── ai-parser/        # AI parsing worker
-        ├── src/
-        │   └── index.ts
-        ├── wrangler.toml
-        └── package.json
 ```
 
 ## Scripts
@@ -258,20 +124,6 @@ utility-workers/
 | `bun run fix` | Auto-fix lint issues |
 | `bun run type-check` | TypeScript check |
 | `bun run clean` | Remove build artifacts |
-
-## Extracting to Separate Repository
-
-This folder is designed to be extracted as-is:
-
-```bash
-# From webresume.now root
-mv workers ../utility-workers
-cd ../utility-workers
-bun install
-bun run dev:all
-```
-
-No changes required - all paths and configs are self-contained.
 
 ## License
 
