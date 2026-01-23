@@ -52,11 +52,16 @@ curl -X POST https://pdf-text-worker.your-domain.workers.dev/extract \
 
 ### From Another Worker (Service Binding)
 
-Add to your `wrangler.toml`:
-```toml
-[[services]]
-binding = "PDF_WORKER"
-service = "pdf-text-worker"
+Add to your `wrangler.jsonc`:
+```jsonc
+{
+  "services": [
+    {
+      "binding": "PDF_WORKER",
+      "service": "pdf-text-worker"
+    }
+  ]
+}
 ```
 
 **Typed client (recommended):**

@@ -31,8 +31,8 @@ bunx wrangler secret put CF_AI_GATEWAY_ID
 bunx wrangler secret put CF_AIG_AUTH_TOKEN
 
 # Tail worker logs
-bunx wrangler tail --config packages/pdf-text/wrangler.toml
-bunx wrangler tail --config packages/ai-parser/wrangler.toml
+bunx wrangler tail --config packages/pdf-text/wrangler.jsonc
+bunx wrangler tail --config packages/ai-parser/wrangler.jsonc
 ```
 
 ## Architecture
@@ -56,12 +56,17 @@ Both workers use Hono framework and export typed app definitions for RPC client 
 
 ### Service Bindings
 
-Workers communicate via Cloudflare service bindings. Consumer workers configure bindings in `wrangler.toml`:
+Workers communicate via Cloudflare service bindings. Consumer workers configure bindings in `wrangler.jsonc`:
 
-```toml
-[[services]]
-binding = "PDF_WORKER"
-service = "pdf-text-worker"
+```jsonc
+{
+  "services": [
+    {
+      "binding": "PDF_WORKER",
+      "service": "pdf-text-worker"
+    }
+  ]
+}
 ```
 
 Then use Hono's typed RPC client:

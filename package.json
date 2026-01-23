@@ -10,7 +10,7 @@
     "dev": "bun run --filter '*' dev",
     "dev:pdf": "bun run --filter '@utility-workers/pdf-text' dev",
     "dev:ai": "bun run --filter '@utility-workers/ai-parser' dev",
-    "dev:all": "bunx wrangler dev -c packages/pdf-text/wrangler.toml -c packages/ai-parser/wrangler.toml",
+    "dev:all": "bunx wrangler dev -c packages/pdf-text/wrangler.jsonc -c packages/ai-parser/wrangler.jsonc",
     "build": "bun run --filter '*' build",
     "deploy": "bun run --filter '*' deploy",
     "deploy:pdf": "bun run --filter '@utility-workers/pdf-text' deploy",

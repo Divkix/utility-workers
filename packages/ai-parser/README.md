@@ -106,11 +106,16 @@ curl -X POST https://ai-parser-worker.your-domain.workers.dev/parse \
 
 ### From Another Worker (Service Binding)
 
-Add to your `wrangler.toml`:
-```toml
-[[services]]
-binding = "AI_PARSER"
-service = "ai-parser-worker"
+Add to your `wrangler.jsonc`:
+```jsonc
+{
+  "services": [
+    {
+      "binding": "AI_PARSER",
+      "service": "ai-parser-worker"
+    }
+  ]
+}
 ```
 
 **Typed client (recommended):**

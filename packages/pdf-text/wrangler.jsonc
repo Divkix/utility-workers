@@ -1,0 +1,21 @@
+{
+  // PDF Text Extraction Worker
+  // Extracts text content from PDF files using unpdf
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pdf-text-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "minify": true,
+  "placement": {
+    "mode": "smart"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  }
+}

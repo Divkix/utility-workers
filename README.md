@@ -39,16 +39,21 @@ See [ai-parser README](./packages/ai-parser/README.md#configuration) for require
 
 ## Using from Another Worker
 
-### 1. Add service bindings to your wrangler.toml
+### 1. Add service bindings to your wrangler.jsonc
 
-```toml
-[[services]]
-binding = "PDF_WORKER"
-service = "pdf-text-worker"
-
-[[services]]
-binding = "AI_PARSER"
-service = "ai-parser-worker"
+```jsonc
+{
+  "services": [
+    {
+      "binding": "PDF_WORKER",
+      "service": "pdf-text-worker"
+    },
+    {
+      "binding": "AI_PARSER",
+      "service": "ai-parser-worker"
+    }
+  ]
+}
 ```
 
 ### 2. Use with Hono RPC client (typed)
