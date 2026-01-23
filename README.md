@@ -127,4 +127,4 @@ utility-workers/
 
 ## License
 
-MIT
+[MIT](./LICENSE)
