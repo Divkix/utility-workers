@@ -1,0 +1,24 @@
+{
+  "name": "@utility-workers/ai-parser",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Worker for AI-powered structured text parsing via OpenRouter",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "type-check": "tsc --noEmit",
+    "tail": "wrangler tail"
+  },
+  "dependencies": {
+    "@utility-workers/shared": "workspace:*",
+    "hono": "^4.7.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250124.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.60.0"
+  }
+}

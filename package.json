@@ -1,0 +1,33 @@
+{
+  "name": "utility-workers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reusable Cloudflare Workers for PDF extraction and AI parsing",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter '*' dev",
+    "dev:pdf": "bun run --filter '@utility-workers/pdf-text' dev",
+    "dev:ai": "bun run --filter '@utility-workers/ai-parser' dev",
+    "dev:all": "bunx wrangler dev -c packages/pdf-text/wrangler.toml -c packages/ai-parser/wrangler.toml",
+    "build": "bun run --filter '*' build",
+    "deploy": "bun run --filter '*' deploy",
+    "deploy:pdf": "bun run --filter '@utility-workers/pdf-text' deploy",
+    "deploy:ai": "bun run --filter '@utility-workers/ai-parser' deploy",
+    "lint": "bunx biome check .",
+    "fix": "bunx biome check --write .",
+    "type-check": "bun run --filter '*' type-check",
+    "clean": "rm -rf packages/*/dist packages/*/.wrangler"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
+    "@cloudflare/workers-types": "^4.20260123.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.60.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "bun@1.2.0"
+}
