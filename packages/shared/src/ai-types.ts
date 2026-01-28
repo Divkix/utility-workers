@@ -5,6 +5,14 @@
  */
 
 /**
+ * Provider sorting strategy for OpenRouter
+ * - "throughput": Highest tokens/second first
+ * - "latency": Lowest time-to-first-token first
+ * - "price": Cheapest first
+ */
+export type ProviderSort = "throughput" | "latency" | "price";
+
+/**
  * Request body for AI parsing
  */
 export interface AiParseRequest {
@@ -20,6 +28,8 @@ export interface AiParseRequest {
   temperature?: number;
   /** Maximum tokens in response */
   maxTokens?: number;
+  /** Provider sorting strategy (default: throughput) */
+  providerSort?: ProviderSort;
 }
 
 /**
