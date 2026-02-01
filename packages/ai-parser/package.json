@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@utility-workers/shared": "workspace:*",
-    "hono": "^4.7.0"
+    "hono": "^4.11.7"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250124.0",
+    "@cloudflare/workers-types": "^4.20260131.0",
     "typescript": "^5.9.3",
     "wrangler": "^4.60.0"
   }
