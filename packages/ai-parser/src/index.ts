@@ -167,7 +167,7 @@ app.post("/parse", async (c) => {
       model = "google/gemini-2.5-flash-lite",
       temperature = 0,
       maxTokens = 4096,
-      providerSort = "throughput",
+      providerSort,
     } = body;
 
     // Call OpenRouter API
@@ -194,11 +194,13 @@ app.post("/parse", async (c) => {
           },
           temperature,
           max_tokens: maxTokens,
-          provider: {
-            sort: providerSort,
-            require_parameters: true,
-            allow_fallbacks: false,
-          },
+          ...(providerSort && {
+            provider: {
+              sort: providerSort,
+              require_parameters: true,
+              allow_fallbacks: false,
+            },
+          }),
         }),
       });
 

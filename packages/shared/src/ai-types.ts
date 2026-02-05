@@ -28,7 +28,7 @@ export interface AiParseRequest {
   temperature?: number;
   /** Maximum tokens in response */
   maxTokens?: number;
-  /** Provider sorting strategy (default: throughput) */
+  /** Provider sorting strategy (optional - omit for OpenRouter's native load balancing) */
   providerSort?: ProviderSort;
 }
 
